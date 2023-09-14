@@ -1,0 +1,93 @@
+
+<ng-container>
+    <div class="flex justify-between mb-4">
+        <div class="flex items-center gap-4">
+            <button class="bg-white border-2 border-prim text-prim font-normal py-1 px-4  rounded hover:opacity-90">
+                <i class="ri-filter-2-fill ri-1x"></i> Filter
+            </button>
+            
+            <div class="relative w-96">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-prim" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                </div>
+                <input type="search" id="default-search" class="block w-full p-2 pl-10 text-sm bg-secon text-gra placeholder-text-prim rounded-lg" placeholder="Search Mockups, Logos..." >
+            </div>
+
+        </div>
+        <button class="bg-prim text-white font-normal py-1 px-4  rounded hover:opacity-90" (click)="addEvent.emit('Add New User')">
+            Add new
+        </button>
+    </div>
+    <ng-datatable [rows]="rows" [columns]="cols">
+      <ng-template slot="name" let-value="data">
+        <div class="font-medium">{{ value.name.firstname + ' ' + value.name.lastname | titlecase }}</div>
+      </ng-template>
+        <ng-template slot="actions" let-value="data">
+          <div class="btn-group" dropdown>
+            <span id="button-animated" dropdownToggle  class="dropdown-toggle"
+                    aria-controls="dropdown-animated">
+                    <span class="text-prim">View more</span> <i class="ri-more-2-fill text-prim"></i>
+            </span>
+            <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu"
+                role="menu" aria-labelledby="button-animated">
+              <li role="menuitem"><span class="dropdown-item" type="button" (click)="openModalWithClass(template, value, 'Edit User')">Edit</span></li>
+              <li role="menuitem"><span class="dropdown-item" type="button" (click)="openModalWithClass(template, value)">View action</span>
+              </li>
+              <li role="menuitem"><a class="dropdown-item text-danger" href="#" (click)="deleteUser(value)">Delete</a></li>
+            </ul>
+          </div>
+        </ng-template>
+    </ng-datatable>
+
+  </ng-container>
+  <ng-template #template>  
+    <div class="modal-header">  
+      <h4 class="modal-title pull-left">{{ global.user?.header }}</h4>  
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalService.hide()">  
+        <span aria-hidden="true">×</span>  
+      </button>  
+    </div>  
+    <div class="modal-body"> 
+      <ng-container *ngIf="global.user?.header == 'User Details'">
+        <div class="d-flex align-items-center gap-x-3">
+          <div class="d-flex align-items-center justify-content-center" style="width: 64px; height: 64px; border-radius: 100%; background: #e1e1e1;">
+            <i class="ri-user-3-line ri-2x"></i>
+          </div>
+          <div class="d-block">
+            <h3 class="text-capitalize fw-bold">{{global.user?.name.firstname +' '+ global.user?.name.lastname | titlecase}}</h3>
+            <div class="mr-2">
+              <p class="text-xs">{{global.user?.email}}</p> 
+              <p class="text-prim text-xs">@{{global.user?.username}} | {{global.user?.phone}}</p> 
+            </div>
+          </div>
+        </div> 
+        <div class="my-4 rounded-sm" style="background: #e1e1e1;">
+          <p class="text-muted text-xs pl-2">Contact Address</p>
+        </div>
+        <div class="row">
+          <div class="col-md-7">
+            <div class="row">
+              <div class="col-md-6"><p class="text-sm fw-bold">Street</p></div>
+              <div class="col-md-6"><p class="text-sm">No. {{global.user?.address?.number + ' ' + global.user?.address?.street}}</p></div>
+              <div class="col-md-6"><p class="text-sm fw-bold">City</p></div>
+              <div class="col-md-6"><p class="text-sm">{{global.user?.address?.city}}</p></div>
+              <div class="col-md-6"><p class="text-sm fw-bold">Zipcode</p></div>
+              <div class="col-md-6"><p class="text-sm">{{global.user?.address?.zipcode}}</p></div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      
+      <ng-container *ngIf="global.user?.header == 'Edit User'">
+        <app-user-edit-form [formData]="global.user" (userFormEvent)="data=$event"></app-user-edit-form>
+        <button class="btn bg-prim" [disabled]="!data" (click)="submit()">Create</button>
+      </ng-container>
+      
+    </div>  
+  
+    <div class="modal-footer">  
+      <button type="button" class="btn bg-prim" (click)="modalService.hide()">Close</button>  
+    </div>  
+  </ng-template> 
