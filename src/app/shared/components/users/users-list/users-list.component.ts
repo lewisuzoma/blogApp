@@ -1,14 +1,15 @@
-import { Component, EventEmitter, OnInit, Output, TemplateRef } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataTableModule } from '@bhplugin/ng-datatable';
 import { colDef } from '@bhplugin/ng-datatable';
 import { UsersService } from 'src/app/shared/services/app/users.service';
 import { GlobalService } from 'src/app/shared/services/core/global.service';
-import { retry } from 'rxjs/operators';
 import { BsDropdownConfig, BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'; 
 import { UserFormComponent } from '../../forms/user-form/user-form.component';
 import { UserEditFormComponent } from '../../forms/user-edit-form/user-edit-form.component';
+import { takeUntil, catchError, finalize } from 'rxjs/operators';
+import { Subject, Subscription, interval, mergeMap, throwError, of, retry  } from 'rxjs';
 
 @Component({
   selector: 'app-users-list',
@@ -24,12 +25,14 @@ import { UserEditFormComponent } from '../../forms/user-edit-form/user-edit-form
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.css']
 })
-export class UsersListComponent implements OnInit {
+export class UsersListComponent implements OnInit, OnDestroy  {
   cols: Array<colDef> = [];
   rows: Array<any> = [];
   modalRef: BsModalRef | undefined;
   @Output() addEvent: EventEmitter<any> = new EventEmitter;
   data: any;
+  private usersSubscription: Subscription | undefined;
+  private ngUnsubscribe = new Subject<void>();
 
   constructor(
     private usersService: UsersService,
@@ -42,6 +45,11 @@ export class UsersListComponent implements OnInit {
   ngOnInit(): void {
     this.fetchUsers();
   }
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
 
   openModalWithClass(template: TemplateRef<any>, user: any, type?: string) {  
     this.modalRef = this.modalService.show(  
@@ -69,19 +77,52 @@ export class UsersListComponent implements OnInit {
     }
   }
 
-  async fetchUsers() {
-    try {
-      this.global.users = await this.usersService.getUsers();
-      this.global.alertType.next('info');
-      this.global.alertMessage.next('Users retrieved successfully');
-      this.initData();
-    } catch (error: any) {
-      this.global.alertType.next('danger');
-      this.global.alertMessage.next(error?.error || error?.detail || error);
-    } 
-    finally {
-      setTimeout(() => this.global.alertType.next(false) , 5000);
-    }
+  // async fetchUsers() {
+  //   try {
+  //     this.global.users = await this.usersService.getUsers();
+  //     this.global.alertType.next('info');
+  //     this.global.alertMessage.next('Users retrieved successfully');
+  //     this.initData();
+  //   } catch (error: any) {
+  //     this.global.alertType.next('danger');
+  //     this.global.alertMessage.next(error?.error || error?.detail || error);
+  //   } 
+  //   finally {
+  //     setTimeout(() => this.global.alertType.next(false) , 5000);
+  //   }
+  // }
+
+  fetchUsers() {
+      this.usersSubscription = this.usersService.getUsers()
+      .pipe(
+        retry({ count: 2, delay: 1000 }),
+        takeUntil(this.ngUnsubscribe),
+        catchError(error => {
+          console.error('Error fetching users:', error);
+          this.global.alertType.next('danger');
+          this.global.alertMessage.next(error?.error || error?.detail || error);
+          return [];
+        }),
+        finalize(() => {
+          setTimeout(() => this.global.alertType.next(false), 5000);
+        })
+      )
+      .subscribe(
+        {
+          next: (users: any) => {
+            this.global.users = users
+            this.global.alertType.next('info');
+            this.global.alertMessage.next('Users retrieved successfully');
+            console.log(this.global.users)
+            this.initData();
+          },
+          error: (error) => {
+            this.global.alertType.next('danger');
+            this.global.alertMessage.next(error);
+            console.log('Error fetching users:', error)
+          }
+        }
+      )
   }
 
   initData(){

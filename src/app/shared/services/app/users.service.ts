@@ -18,19 +18,27 @@ export class UsersService {
     private global: GlobalService
   ) { }
 
-  async getUsers() {
-    return await new Promise<IUsers[]>(async (resolve, reject) => {
-      this.global.spinner.show();
-      try {
-        const users: any = await this.api.get(`users`);
-        if (users.error) throw new Error(users.error || users);
-        this.users = users;
-        resolve(this.users);
-      } catch (ex: any) {
-        this.global.spinner.hide();
-        reject({ error: ex.error || ex.detail || ex });
-      } 
-    })
+  // async getUsers() {
+  //   return await new Promise<IUsers[]>(async (resolve, reject) => {
+  //     this.global.spinner.show();
+  //     try {
+  //       const users: any = await this.api.get(`users`);
+  //       if (users.error) throw new Error(users.error || users);
+  //       this.users = users;
+  //       resolve(this.users);
+  //     } catch (ex: any) {
+  //       this.global.spinner.hide();
+  //       reject({ error: ex.error || ex.detail || ex });
+  //     } 
+  //   })
+  // }
+
+  getUsers(): Observable<IUsers[]> {
+    return this.api.get('users').pipe(
+      catchError(error => {
+        return throwError(() => error);
+      })
+    );
   }
 
   // getUsers(): Observable<IUsers[]> {

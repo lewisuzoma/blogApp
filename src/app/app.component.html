@@ -1,8 +1,8 @@
 <app-alert-component *ngIf="global.alertType | async" [type]="global.alertType | async" [message]="global.alertMessage | async"></app-alert-component>
 
 <main class="p-4 mt-28 flex items-center justify-center">
-  
-  <app-users-list class="w-4/5" (addEvent)="openModalWithClass(template, $event)"></app-users-list>
+  <app-blog-list></app-blog-list>
+  <!-- <app-users-list class="w-4/5" (addEvent)="openModalWithClass(template, $event)"></app-users-list> -->
   <!-- <app-full-loader></app-full-loader> -->
   <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 

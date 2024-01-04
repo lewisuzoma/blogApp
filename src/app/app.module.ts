@@ -13,6 +13,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { GlobalService } from './shared/services/core/global.service';
 import { AlertComponentComponent } from './shared/components/ui/alert-component/alert-component.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BlogListComponent } from './shared/components/blogs/blog-list/blog-list.component';
 
 export function initializeApp(globals: GlobalService) {
   return async (): Promise<void> => {
@@ -42,7 +43,8 @@ export function initializeApp(globals: GlobalService) {
     AlertComponentComponent,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BlogListComponent
   ],
   providers: [
     GlobalService,
