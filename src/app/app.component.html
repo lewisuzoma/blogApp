@@ -1,26 +1,8 @@
 <app-alert-component *ngIf="global.alertType | async" [type]="global.alertType | async" [message]="global.alertMessage | async"></app-alert-component>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
 
 <main class="p-4 mt-28 flex items-center justify-center">
-  <app-blog-list></app-blog-list>
-  <!-- <app-users-list class="w-4/5" (addEvent)="openModalWithClass(template, $event)"></app-users-list> -->
-  <!-- <app-full-loader></app-full-loader> -->
-  <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-
-<br>  
-
-<ng-template #template>  
-  <div class="modal-header">  
-    <h4 class="modal-title pull-left">{{title}}</h4>  
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalService.hide()">  
-      <span aria-hidden="true">×</span>  
-    </button>  
-  </div>  
-  <div class="modal-body">  
-    <app-user-form (userFormEvent)="data=$event"></app-user-form>
-      <button class="btn bg-prim" [disabled]="!data" (click)="submit()">Create</button>
-  </div>  
-  
-</ng-template>  
+  <router-outlet></router-outlet>
 </main>
 
 

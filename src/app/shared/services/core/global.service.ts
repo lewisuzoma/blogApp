@@ -9,6 +9,7 @@ export class GlobalService {
   spinnerText: string = 'Processing...';
   users: any;
   user: any;
+  loading: BehaviorSubject<any> = new BehaviorSubject<any>(false);
   alertType: BehaviorSubject<any> = new BehaviorSubject<any>(false);
   alertMessage: BehaviorSubject<any> = new BehaviorSubject<any>(false);
 

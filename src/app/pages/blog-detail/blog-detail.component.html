@@ -1,0 +1,23 @@
+<div class="w-full md:max-w-lg rounded overflow-hidden border border-gray-100">
+    <div class="pt-3 pb-2">
+        <span class="text-prim cursor-pointer" [routerLink]="previousUrl" ><i class="ri-arrow-left-line"></i> Back</span>
+    </div>
+    <img class="w-full" [src]="blog?.image" [alt]="blog?.title" style="height: 10rem;">
+    <div class="px-6 py-4">
+      <div class="font-bold text-xl mb-2 cursor-pointer">{{blog?.title}}</div>
+        <div class="text-xs text-gra">
+            <span><i class="ri-time-line"></i> 20-01-2024</span>
+            <span class="p-2"><i class="ri-message-2-line"></i> 20 Comments</span>
+        </div>
+        <!-- @if(admin) {
+          <div class="text-xs flex gap-3 mt-3">
+            <span class="text-primary cursor-pointer" (click)="editEvent.emit({name: 'edit blog', id:blog?.id})"><i class="ri-edit-line"></i>Edit</span>
+            <span class="text-danger cursor-pointer" (click)="deleteEvent.emit(blog?.id)"><i class="ri-delete-bin-2-line"></i>Delete</span>
+          </div>
+        } -->
+      <p class="text-gray-700 text-base mt-2" [innerHTML]="blog?.description"></p>
+    </div>
+    <!-- <div class="px-6 pt-3 pb-2">
+        <span class="text-prim cursor-pointer" [routerLink]="'/blog/'+blog?.id" routerDirection="forward">Read more</span>
+    </div> -->
+  </div>

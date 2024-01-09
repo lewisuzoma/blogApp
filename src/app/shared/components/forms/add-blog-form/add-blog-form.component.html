@@ -1,0 +1,38 @@
+
+<form [formGroup]="blogForm" class="w-full">
+    <div class="flex flex-wrap -mx-3 mb-6">
+      <div class="w-full px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="title">
+          Blog title
+        </label>
+        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="title" type="text" placeholder="Enter text here..." formControlName="title" (input)="submit($event)">
+        <p *ngIf="f.title?.invalid && (f.title?.dirty || f.title?.touched)" class="text-red-500 text-xs italic">
+            <span *ngIf="f.title?.errors?.['required']">Please fill out this field.</span>
+        </p>
+      </div>
+    </div>
+    
+    <div>
+        <div class="flex flex-wrap -mx-3 mb-2">
+        <div class="w-full px-3 mb-6 md:mb-0">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="description">
+            Blog description
+            </label>
+            <textarea rows="5" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="description" placeholder="Enter text here..." formControlName="description" (input)="submit($event)"></textarea>
+            <p *ngIf="f.description?.invalid && (f.description?.dirty || f.description?.touched)" class="text-red-500 text-xs italic">
+                <span *ngIf="f.description?.errors?.['required']">Please fill out this field.</span>
+            </p>
+        </div>        
+        </div>
+        
+        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="image">
+            Blog image
+            </label>
+            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="image" type="file" formControlName="image" (input)="submit($event)" accept="image/*">
+            <p *ngIf="f.image?.invalid && (f.image?.dirty || f.image?.touched)" class="text-red-500 text-xs italic">
+                <span *ngIf="f.image?.errors?.['required']">Please fill out this field.</span>
+            </p>
+        </div>
+        </div>
+  </form>

@@ -1,0 +1,32 @@
+<app-blog-list (addEvent)="openModalWithClass(template, $event)" (deleteEvent)="deleteFn($event)" (editEvent)="openModalWithClass2(template2, $event)" [admin]="true" [data]="allblogs"></app-blog-list>
+  <!-- <app-users-list class="w-4/5" (addEvent)="openModalWithClass(template, $event)"></app-users-list> -->
+  <!-- <app-full-loader></app-full-loader> -->
+
+<br>  
+
+<ng-template #template>  
+  <div class="modal-header">  
+    <h4 class="modal-title pull-left">{{title}}</h4>  
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalService.hide()">  
+      <span aria-hidden="true">×</span>  
+    </button>  
+  </div>  
+  <div class="modal-body">  
+    <add-blog-form (blogFormEvent)="data=$event"></add-blog-form>
+      <button class="btn bg-prim mt-4" [disabled]="!data" (click)="submit()">{{(global.loading | async) ? 'Loading...' : 'Create'}}</button>
+  </div>  
+  
+</ng-template>  
+<ng-template #template2>  
+  <div class="modal-header">  
+    <h4 class="modal-title pull-left">{{title}}</h4>  
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalService.hide()">  
+      <span aria-hidden="true">×</span>  
+    </button>  
+  </div>  
+  <div class="modal-body">  
+    <edit-blog-form (blogFormEvent)="data=$event" [blog]="blogDetail"></edit-blog-form>
+      <button class="btn bg-prim mt-4" [disabled]="!data" (click)="update()">{{(global.loading | async) ? 'Loading...' : 'Update' }}</button>
+  </div>  
+  
+</ng-template>  

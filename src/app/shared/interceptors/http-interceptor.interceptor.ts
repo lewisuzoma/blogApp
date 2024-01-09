@@ -18,6 +18,7 @@ export class HttpInterceptorInterceptor implements HttpInterceptor {
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.global.spinner.show();
+    this.global.loading.next(true);
     let headers: { [key: string]: string } = {
       'content-type': 'application/json',
       'realm': 'default',
@@ -38,6 +39,7 @@ export class HttpInterceptorInterceptor implements HttpInterceptor {
       finalize(
         () => {
           this.global.spinner.hide();
+          this.global.loading.next(false);
         }
       )
     )
